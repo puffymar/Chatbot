@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot Assistant</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        #chatbox {
+            width: 300px;
+            height: 400px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            overflow-y: scroll;
+        }
+        #userInput {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Chatbot Assistant</h1>
+    <div id="chatbox"></div>
+    <input type="text" id="userInput" placeholder="Type your message 
+here...">
+    <button onclick="sendMessage()">Send</button>
+
+    <script>
+        function sendMessage() {
+            const userInput = document.getElementById("userInput").value;
+            fetch("/ask", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ message: userInput }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                const chatbox = document.getElementById("chatbox");
+                chatbox.innerHTML += `<p><strong>You:</strong> 
+${userInput}</p>`;
+                chatbox.innerHTML += `<p><strong>Bot:</strong> 
+${data.response}</p>`;
+                chatbox.scrollTop = chatbox.scrollHeight; // Auto-scroll
+                document.getElementById("userInput").value = ""; // Clear 
+input
+            });
+        }
+    </script>
+</body>
+</html>
